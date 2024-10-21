@@ -1,0 +1,11 @@
+<resources>
+    <string name="app_name">Internet Market</string>
+    <string name="tv_header">MARKETPLACE</string>
+    <string name="btn_start">Начать покупки</string>
+    <string name="logo">logo</string>
+    <string name="tv_check">ООО \"Маркетплейс\"
+    \n\nЧек № </string>
+    <string name="your_cart">Your Cart</string>
+    <string name="fab_market">К корзине</string>
+    <string name="fab_cart">Получить чек</string>
+</resources>

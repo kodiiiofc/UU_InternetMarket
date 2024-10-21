@@ -14,6 +14,7 @@ class CartFragment : Fragment() {
 
     private lateinit var itemsRV: RecyclerView
     private lateinit var fab: FloatingActionButton
+    private lateinit var adapter: ItemsCartAdapter
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -27,14 +28,32 @@ class CartFragment : Fragment() {
         itemsRV = view.findViewById(R.id.rv_items_cart)
         fab = view.findViewById(R.id.fab_cart)
 
-        val cartWithCount = Items.getCartWithCount()
-        val adapter = ItemsCartAdapter(requireContext(), cartWithCount)
+        adapter = ItemsCartAdapter(requireContext(), Items.getCartWithCount())
         itemsRV.adapter = adapter
+
+        adapter.setOnItemClickListener {
+            val item = Items.getCartWithCount().toList()[it]
+            val dialog = AlertDialog.Builder(requireContext())
+            dialog.setTitle("Внимание!")
+                .setMessage("Вы хотите удалить ${item.first.name} из корзины?")
+                .setPositiveButton("Удалить") { dialog, _ ->
+                    deleteFromCart(item)
+                    dialog.dismiss()
+                }
+                .setNeutralButton("Отмена", null)
+                .create().show()
+        }
 
         fab.setOnClickListener {
             parentFragmentManager.beginTransaction()
                 .replace(R.id.cl_main, CheckFragment())
                 .commit()
         }
+    }
+
+    private fun deleteFromCart(item: Pair<Item, Int>) {
+        val index = Items.cart.indexOf(item.first)
+        Items.cart.removeAt(index)
+        adapter.updateMap(Items.getCartWithCount())
     }
 }

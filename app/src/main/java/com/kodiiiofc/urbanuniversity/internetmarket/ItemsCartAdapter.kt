@@ -8,8 +8,11 @@ import android.view.ViewGroup
 import android.widget.ImageView
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
+import com.kodiiiofc.urbanuniversity.internetmarket.ItemsAdapter.OnItemClickListener
 
-class ItemsCartAdapter(private val context: Context, private val map: Map<Item, Int>) : RecyclerView.Adapter<ItemsCartAdapter.ItemViewHolder>() {
+class ItemsCartAdapter(private val context: Context, private var map: Map<Item, Int>) : RecyclerView.Adapter<ItemsCartAdapter.ItemViewHolder>() {
+
+    private var _itemClickListener: OnItemClickListener? = null;
 
     inner class ItemViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
         private val nameTV: TextView = itemView.findViewById(R.id.tv_name)
@@ -33,9 +36,25 @@ class ItemsCartAdapter(private val context: Context, private val map: Map<Item, 
     override fun onBindViewHolder(holder: ItemViewHolder, position: Int) {
         val currentItem = map.toList()[position]
         holder.onBind(currentItem.first, currentItem.second)
+        holder.itemView.setOnClickListener {
+            _itemClickListener?.onItemClick(position);
+        }
     }
 
     override fun getItemCount(): Int {
         return map.size
+    }
+
+    fun interface OnItemClickListener {
+        fun onItemClick(position: Int)
+    }
+
+    fun setOnItemClickListener(itemClickListener: OnItemClickListener) {
+        _itemClickListener = itemClickListener
+    }
+
+    fun updateMap(updatedMap: Map<Item, Int>) {
+        map = updatedMap
+        notifyDataSetChanged()
     }
 }
